@@ -3,7 +3,7 @@ import LoginModal from './modal/loginUserModal';
 
 export const Header = () => {
   return (
-    <div className="navbar bg-black text-white">
+    <div className="navbar bg-white text-black">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -45,12 +45,12 @@ export const Header = () => {
             </li>
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">Groove Gala</a>
+        <a className="btn btn-ghost text-xl" href='/'>Groove Gala</a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>Anything</a>
+            <a>Event</a>
           </li>
           <li>
             <details>
