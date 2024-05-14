@@ -9,9 +9,9 @@ import { transporter } from '@/helpers/nodemailer'
 
 const prisma = new PrismaClient()
 export class UserController {
-    getUser(req: Request, res: Response) {
+    async getUser(req: Request, res: Response) {
         try {
-            const users = prisma.user.findMany()
+            const users = await prisma.user.findMany()
             res.status(200).send({
                 status: 'ok',
                 users
@@ -89,16 +89,16 @@ export class UserController {
         await transporter.sendMail({
             from: process.env.MAIL_USER,
             to: users.email,
-            subject: "Welcome To EventCuy",
+            subject: "Verify your account",
             html
         })
         res.status(200).send({
             status: 'ok',
             message: 'User Created',
-            users
+            users,
+            token
         })
         } catch (err) {
-            // console.log(err)
             res.status(400).send({
                 status: 'error',
                 message: err
@@ -107,51 +107,33 @@ export class UserController {
         
     } 
     async loginUser(req: Request, res: Response) {
-        
         try {
-            console.log('zzz');
-            
             const { email, password } = req.body
             const user = await prisma.user.findFirst({
                 where: {
-                    email
+                    email,
                 },
             })
             if (user == null) throw "Users Not Found"
             const isValidPass = await compare(password, user.password)
             if(!isValidPass) throw 'Wrong Password'
-            const payload = {
-                id: user.id,
-                isActive: user.isActive
-            }
-            const token = sign(payload, process.env.KEY_JWT as string)
+            const payload = {id: user.id, type: user.type}
+            const token = sign(payload, process.env.KEY_JWT!,{expiresIn: '1h'})
             res.status(200).send({
                 status: 'ok',
-                user, token
+                user, 
+                token,
+                data: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    type: user.type}
             })
         } catch (err) {
+            console.log(err);
             res.status(400).send({
                 status: 'error',
                 message: err
-            })
-        }
-    }
-    async verifyUsers(req: Request, res: Response) {
-        try {
-            await prisma.user.update({
-                data: {
-                    isActive: true
-                }, where: {
-                    id: req.user?.id
-                }
-            }), res.status(200).send({ 
-                status: 'ok',
-                message: 'Verify Account Done'
-            })
-        } catch (err) {
-            res.status(400).send({
-                status: 'err',
-                err
             })
         }
     }

@@ -25,13 +25,12 @@ export class PromotorController {
     }
     async promotorRegister(req: Request, res: Response){
         try {
-            const { name, email, password, image  } = req.body
+        const { name, email, password, image  } = req.body
         const salt = await genSalt(10)
         const hashPassword = await hash(password,salt)
         let promotor = await prisma.promotor.findUnique({
             where: {
                 email
-                
             }
         })
         if (promotor?.isActive == true) throw "Email Already Exist"
@@ -71,11 +70,12 @@ export class PromotorController {
         await transporter.sendMail({
             from: process.env.MAIL_USER,
             to: promotor.email,
-            subject: "Verify your Promotor account",
+            subject: "Verify your account",
             html
         })
         res.status(200).send({
             status: 'ok',
+            message: 'Created',
             promotor,
             token
         })
@@ -92,18 +92,23 @@ export class PromotorController {
             const {email, password} = req.body
             const promotor = await prisma.promotor.findFirst({
                 where: {
-                    email
+                    email,
                 }
             })
             if (promotor == null ) throw "User Not Found!"
             const isValidPass = await compare(password, promotor.password)
             if (isValidPass == false) throw "Wrong Password"
-            const payload = {id: promotor.id}
+            const payload = {id: promotor.id, type: promotor.type}
             const token = sign(payload, process.env.KEY_JWT!, {expiresIn: '1h'}) 
             res.status(200).send({
                 status: 'ok', 
-                promotor, 
-                token
+                token, 
+                data: {
+                    id: promotor.id,
+                    name: promotor.name,
+                    email: promotor.email,
+                    type: promotor.type
+                }
             })
         } catch (error) {
             res.status(400).send({

@@ -6,7 +6,8 @@ export interface UserSlice {
         name: string,
         email: string,
         referral?: string,
-        image: string
+        image: string,
+        type: string
     } | null
 }
 const initialState: UserSlice = {

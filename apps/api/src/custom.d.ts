@@ -1,7 +1,9 @@
 // req.user
 type User = {
     id: number
-    isPromotor: Boolean
+    name: string
+    email: string
+    type: string
 }
 declare namespace Express {
     export interface Request {

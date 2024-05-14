@@ -28,6 +28,7 @@ model User {
   image    String? @db.LongText
   password String
   referral String  @unique
+  type     String  @default("users")
   redeem   Boolean @default(true)
   isActive Boolean @default(false)
   Point    Point[]
@@ -36,9 +37,10 @@ model User {
 model Promotor {
   id       Int     @id @default(autoincrement())
   name     String
-  email    String @unique
+  email    String  @unique
   image    String? @db.LongText
   password String
+  type     String  @default("promotors")
   isActive Boolean @default(false)
   Event    Event[]
 }
@@ -88,7 +90,7 @@ model Transaction {
   totalDisc   Int
   total       Int
   status      TransactionStat
-  image       String? 
+  image       String?
   dateDate    DateTime        @default(now())
   expiredDate DateTime        @default(now())
 }

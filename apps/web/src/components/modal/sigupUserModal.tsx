@@ -1,7 +1,6 @@
 'use client';
 import { Formik, ErrorMessage, Field, Form } from 'formik';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import * as yup from 'yup';
 
 const registerSchema = yup.object().shape({
@@ -11,17 +10,16 @@ const registerSchema = yup.object().shape({
     .string()
     .min(6, 'Password must contains at least 6 characters')
     .required('Password can not be empty'),
-  refCode: yup.string().optional(),
+  ref: yup.string().optional(),
 });
 
 export default function SignupUserModal() {
-  const [loadingDisplay] = useState('hidden');
   const router = useRouter();
   const handleRegister = async (dataSet: {
     name: string;
     email: string;
     password: string;
-    refCode: string;
+    ref: string;
   }) => {
     try {
       const response = await fetch('http://localhost:8000/api/users/register', {
@@ -34,6 +32,8 @@ export default function SignupUserModal() {
       const data = await response.json();
       if (data.status != 'ok') {
         throw data;
+      } else {
+        router.push('/')
       }
     } catch (error: any) {
       console.log(error);
@@ -47,8 +47,8 @@ export default function SignupUserModal() {
           name: '',
           email: '',
           password: '',
-          image: '',
-          refCode: '',
+          // image: '',
+          ref: '',
         }}
         validationSchema={registerSchema}
         onSubmit={(
@@ -56,8 +56,8 @@ export default function SignupUserModal() {
             name: string;
             email: string;
             password: string;
-            image: string;
-            refCode: string;
+            // image: string;
+            ref: string;
           },
           action: { resetForm: () => void },
         ) => {
@@ -140,19 +140,19 @@ export default function SignupUserModal() {
                       </div>
                       <div>
                         <div className="flex flex-col">
-                          <label htmlFor="refCode">
+                          <label htmlFor="ref">
                             <p>referral</p>
                             <Field
-                              type="refCode"
+                              type="ref"
                               placeholder="referral code"
-                              name="refCode" 
+                              name="ref" 
                               className="bg-white text-black border-2 rounded-xl"
                             />
                           </label>
                         </div>
                         <ErrorMessage
                           component="div"
-                          name="refCode"
+                          name="ref"
                           className=" text-[0.7rem] fixed"
                         />
                       </div>

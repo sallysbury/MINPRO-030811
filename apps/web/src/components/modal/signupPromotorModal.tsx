@@ -121,31 +121,13 @@ export default function SignupPromotorModal() {
                             type="password"
                             placeholder="Your password"
                             name="password"
-                            className="bg-zinc-200 text-xl text-xblack border-b-[1px] border-xmetal focus:outline-none placeholder:text-zinc-300"
+                            className="bg-zinc-200 text-xl text-black border-b-[1px] border-xmetal focus:outline-none placeholder:text-zinc-300"
                           />
                         </div>
                         <ErrorMessage
                           component="div"
                           name="password"
                           className="text-sm text-[0.7rem] fixed"
-                        />
-                      </div>
-                      <div>
-                        <div className="flex flex-col">
-                          <label htmlFor="refCode">
-                            <p>referral</p>
-                            <Field
-                              type="refCode"
-                              placeholder="referral code"
-                              name="refCode" 
-                              className="bg-white text-black border-2 rounded-xl"
-                            />
-                          </label>
-                        </div>
-                        <ErrorMessage
-                          component="div"
-                          name="refCode"
-                          className=" text-[0.7rem] fixed"
                         />
                       </div>
                     </div>

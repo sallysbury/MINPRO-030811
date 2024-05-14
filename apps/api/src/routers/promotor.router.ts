@@ -1,5 +1,4 @@
 import { PromotorController } from '@/controllers/promotor.controller';
-import { VerifyToken } from '@/middlewares/token.middleware';
 import { Router } from 'express';
 
 export class promotorRouter {
