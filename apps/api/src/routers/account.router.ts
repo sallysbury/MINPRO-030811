@@ -14,7 +14,7 @@ export class AccountRouter {
     }
 
     private initializerRouters(): void{
-        this.router.get('/accountType', this.verifyAccount.verifyToken ,this.accountController.getAccountType)
+        this.router.get('/accountType', this.verifyAccount.verifyToken ,this.accountController.getAccount)
     }
 
     getRouter(): Router{

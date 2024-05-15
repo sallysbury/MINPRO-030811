@@ -20,7 +20,6 @@ export const Header = () => {
     })
       const data = await res.json()
       console.log(data);
-      
       dispatch(setUser(data.userData))
     } catch (error) {
       console.log(error);
@@ -35,9 +34,8 @@ export const Header = () => {
 
   useEffect(() => {
     const token = Cookies.get('token')
-    if (token !== undefined){
-    getUser(token)
-  }
+   if (token) { getUser(token)}
+
   }, []);
 
   return (

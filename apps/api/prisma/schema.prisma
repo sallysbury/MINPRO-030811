@@ -42,7 +42,7 @@ model Promotor {
   password String
   type     String  @default("promotors")
   isActive Boolean @default(false)
-  Event    Event[]
+  event    Event[]
 }
 
 model Event {
@@ -98,7 +98,7 @@ model Transaction {
 model Point {
   id          Int      @id @default(autoincrement())
   userId      Int
-  point       Int
+  point       Int      @default(10000)
   expiredDate DateTime
   redeem      Boolean  @default(false)
   user        User     @relation(fields: [userId], references: [id])

@@ -17,7 +17,6 @@ const registerSchema = yup.object().shape({
 export default function LoginUserModal() {
   const router = useRouter();
   const dispatch = useDispatch()
-
   const handleLogin = async (dataSet: { email: string; password: string }) => {
     try {
       const response = await fetch('http://localhost:8000/api/users/login', {
@@ -28,11 +27,9 @@ export default function LoginUserModal() {
         body: JSON.stringify(dataSet),
       });
       const data = await response.json();
-      console.log(data);
-      
       dispatch(setUser(data.user))
+      console.log(data.token);
       createToken(data.token, '/')
-      console.log(data);
       
       if (data.status !== 'ok') {
         throw (data.message);

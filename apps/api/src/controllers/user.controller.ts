@@ -112,16 +112,19 @@ export class UserController {
             const user = await prisma.user.findFirst({
                 where: {
                     email,
+                    isActive: false
                 },
             })
-            if (user == null) throw "Users Not Found"
+            console.log(user);
+            
+            if (user == null) throw "kjbl Not Found"
             const isValidPass = await compare(password, user.password)
             if(!isValidPass) throw 'Wrong Password'
             const payload = {id: user.id, type: user.type}
             const token = sign(payload, process.env.KEY_JWT!,{expiresIn: '1h'})
             res.status(200).send({
                 status: 'ok',
-                user, 
+                message: 'user found', 
                 token,
                 data: {
                     id: user.id,
