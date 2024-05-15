@@ -75,10 +75,9 @@ export class UserController {
                 email: exisUsers.email
             }
         })
-        
         const payload = { id: users.id, accountType: "users"}
         const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1h'})
-        const link = `http://localhost:3000/register/verivy/${token}`
+        const link = `http://localhost:3000/verivy/${token}`
         const templatePath = path.join(__dirname, "../templates", "register.html")
         const templateSource = fs.readFileSync(templatePath, "utf-8")
         const compiledTemplates = Handlebars.compile(templateSource)
@@ -104,7 +103,6 @@ export class UserController {
                 message: err
             })
         }
-        
     } 
     async loginUser(req: Request, res: Response) {
         try {
@@ -115,8 +113,6 @@ export class UserController {
                     isActive: false
                 },
             })
-            console.log(user);
-            
             if (user == null) throw "kjbl Not Found"
             const isValidPass = await compare(password, user.password)
             if(!isValidPass) throw 'Wrong Password'

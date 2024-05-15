@@ -61,4 +61,59 @@ export class AccountController {
             
         }
     }
+    async verify(req: Request, res: Response){
+        const date = new Date()
+        date.setHours(0)
+        date.setMinutes(0)
+        date.setSeconds(0)
+        date.setMilliseconds(0)
+        const expired = date.setMonth(date.getMonth() +3 )
+        try {
+            if (req.user?.type == "users"){
+                const user = await prisma.user.update({
+                    data: {
+                        isActive: true,
+                        redeem: false
+                    },
+                    where: {
+                        id: req.user.id
+                    }
+                })
+                await prisma.point.create({
+                    data: {
+                        userId: req.user.id,
+                        expiredDate: new Date(expired)
+                    }
+                })
+                const point = await prisma.point.aggregate({
+                    where: {
+                        userId: req.user.id,
+                        redeem: false
+                    },
+                    _sum: {
+                        point: true
+                    },
+                    _min: {
+                        expiredDate: true
+                    }
+                })
+                
+            } else { req.user?.type == "promotors"}{
+                const promotor = await prisma.user.update({
+                    data: {
+                        isActive: true
+                    },
+                    where: {
+                        id: req.user?.id
+                    }
+                })
+            }
+            res
+        } catch (error) {
+            res.status(200).send({
+                status:'error',
+                error
+            })
+        }
+    }
 }

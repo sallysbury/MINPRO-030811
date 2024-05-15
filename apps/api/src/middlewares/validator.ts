@@ -3,7 +3,7 @@ import { body, validationResult } from 'express-validator';
 
 export class Validator {
   validateRegister = [
-    body('name').notEmpty().withMessage('User Name Required'),
+    body('name').notEmpty().withMessage('Name Required'),
     body('email')
       .notEmpty()
       .withMessage('Email Required')
