@@ -113,7 +113,7 @@ export class UserController {
                     isActive: false
                 },
             })
-            if (user == null) throw "kjbl Not Found"
+            if (user == null) throw "Users Not Found"
             const isValidPass = await compare(password, user.password)
             if(!isValidPass) throw 'Wrong Password'
             const payload = {id: user.id, type: user.type}

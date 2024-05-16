@@ -35,7 +35,6 @@ export const Header = () => {
   useEffect(() => {
     const token = Cookies.get('token')
    if (token) { getUser(token)}
-
   }, []);
 
   return (
