@@ -32,7 +32,7 @@ export default function Verify() {
     }
   };
   return (
-    <div className="flex bg-white justify-center items-center w-full">
+    <div className="flex bg-white justify-center items-center w-full h-screen">
       <div>
         <h1>
           Register your account

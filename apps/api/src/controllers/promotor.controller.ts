@@ -57,9 +57,9 @@ export class PromotorController {
                 }
             })
         }
-        const payload = {id: promotor.id, accountType: "promotor"}
+        const payload = {id: promotor.id, type: promotor.type}
         const token = sign(payload, process.env.KEY_JWT!, {expiresIn: '1h'})
-        const link = `http://localhost:3000/register/verify/${token}`
+        const link = `http://localhost:3000/verify/${token}`
         const templatePath = path.join(__dirname, "../templates", "register.html")
         const templateSource = fs.readFileSync(templatePath, "utf-8")
         const compiledTemplates = Handlebars.compile(templateSource)

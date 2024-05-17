@@ -77,7 +77,7 @@ export class UserController {
                 email: exisUsers.email
             }
         })
-        const payload = { id: users.id, accountType: "users"}
+        const payload = { id: users.id, type: users.type}
         const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1h'})
         const link = `http://localhost:3000/verify/${token}`
         const templatePath = path.join(__dirname, "../templates", "register.html")

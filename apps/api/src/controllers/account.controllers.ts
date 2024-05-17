@@ -5,6 +5,8 @@ import { sign } from 'jsonwebtoken';
 export class AccountController {
   async getAccount(req: Request, res: Response) {
     try {
+        console.log(req.user?.type);
+        
       if (req.user?.type == 'users') {
         const user = await prisma.user.findUnique({
           where: {
@@ -25,7 +27,7 @@ export class AccountController {
         });
       }
       if (req.user?.type == 'promotors') {
-        const promotor = await prisma.user.findUnique({
+        const promotor = await prisma.promotor.findUnique({
           where: {
             id: req.user?.id,
           },
