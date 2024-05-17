@@ -17,7 +17,6 @@ export class UserRouter {
     }
 
     private initializeRoutes(): void {
-        // this.router.get('/verify', this.userMiddleware.verifyToken, this.userController.verifyUsers)
         this.router.get('/', this.userController.getUser)
         this.router.post('/register', this.validator.validateRegister , this.userController.userRegister)
         this.router.post('/login', this.validator.validateLogin , this.userController.loginUser)

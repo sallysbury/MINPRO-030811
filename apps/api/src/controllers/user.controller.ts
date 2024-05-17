@@ -25,23 +25,25 @@ export class UserController {
     }
     async userRegister( req: Request, res: Response) { 
         try {
-        const { password, ref, email, name, image  } = req.body
+        const { password, referral, email, name, image  } = req.body
         const salt = await genSalt(10)
         const hashPassword = await hash(password,salt)
+        let userID
         let exisUsers = await prisma.user.findUnique({
             where: {
                 email
             }
         })
-        if (ref.length !==0){
+        if (exisUsers?.isActive == true) throw 'email already exist'
+        if (referral.length !==0){
             const exisRef = await prisma.user.findUnique({
                 where: {
-                    referral: ref
+                    referral: referral
                 }
             })
             if (exisRef == null) throw "Referral code not exist"
+            userID = exisUsers?.id
         }
-        if(exisUsers?.isActive == true) throw "Email already exist"
         if(exisUsers?.isActive == false && exisUsers){
             exisUsers = await prisma.user.update({
                 data: {
@@ -77,7 +79,7 @@ export class UserController {
         })
         const payload = { id: users.id, accountType: "users"}
         const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1h'})
-        const link = `http://localhost:3000/verivy/${token}`
+        const link = `http://localhost:3000/verify/${token}`
         const templatePath = path.join(__dirname, "../templates", "register.html")
         const templateSource = fs.readFileSync(templatePath, "utf-8")
         const compiledTemplates = Handlebars.compile(templateSource)
@@ -95,6 +97,7 @@ export class UserController {
             status: 'ok',
             message: 'User Created',
             users,
+            type: users.type,
             token
         })
         } catch (err) {
@@ -118,16 +121,65 @@ export class UserController {
             if(!isValidPass) throw 'Wrong Password'
             const payload = {id: user.id, type: user.type}
             const token = sign(payload, process.env.KEY_JWT!,{expiresIn: '1h'})
-            res.status(200).send({
-                status: 'ok',
-                message: 'user found', 
-                token,
-                data: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    type: user.type}
+            const getPoint = await prisma.point.findFirst({
+                where: {
+                    userId: user.id,
+                    redeem: false
+                }
             })
+            if (getPoint !== null){
+                const point = await prisma.point.aggregate({
+                    where: {
+                        userId: user.id,
+                        redeem: false
+                    },
+                    _sum: {
+                        point: true
+                    },
+                    _min: {
+                        expiredDate: true
+                    }
+                })
+                const expireSoonPoint = await prisma.point.aggregate({
+                    where: {
+                        expiredDate: new Date(point._min?.expiredDate!),
+                        redeem: false
+                    },
+                    _sum: {
+                        point: true
+                    }
+                })
+                return res.status(200).send({
+                    status: 'ok',
+                    mesage: 'user found',
+                    token,
+                    data: {
+                        is: user.id,
+                        name: user.name,
+                        email: user.email,
+                        referral: user.referral,
+                        type: user.type,
+                        sumPoint: point._sum.point,
+                        expireSoonPoint: expireSoonPoint._sum.point,
+                        expireDate: point._min.expiredDate,
+                        image: user.image
+                    }
+                })
+            } else {
+                return res.status(200).send({
+                    status: 'ok',
+                    message: 'user found & has no point',
+                    data: {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        referral: user.referral,
+                        sumPoint: 0,
+                        type: user.type
+                    },
+                    token
+                })
+            }
         } catch (err) {
             console.log(err);
             res.status(400).send({

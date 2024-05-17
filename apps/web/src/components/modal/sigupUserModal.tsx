@@ -10,7 +10,7 @@ const registerSchema = yup.object().shape({
     .string()
     .min(6, 'Password must contains at least 6 characters')
     .required('Password can not be empty'),
-  ref: yup.string().optional(),
+  referral: yup.string().optional(),
 });
 
 export default function SignupUserModal() {
@@ -19,7 +19,7 @@ export default function SignupUserModal() {
     name: string;
     email: string;
     password: string;
-    ref: string;
+    referral: string;
   }) => {
     try {
       const response = await fetch('http://localhost:8000/api/users/register', {
@@ -33,7 +33,7 @@ export default function SignupUserModal() {
       if (data.status != 'ok') {
         throw data;
       } else {
-        router.push('/')
+        router.push('/waitingverif')
       }
     } catch (error: any) {
       console.log(error);
@@ -47,8 +47,7 @@ export default function SignupUserModal() {
           name: '',
           email: '',
           password: '',
-          // image: '',
-          ref: '',
+          referral: '',
         }}
         validationSchema={registerSchema}
         onSubmit={(
@@ -56,8 +55,7 @@ export default function SignupUserModal() {
             name: string;
             email: string;
             password: string;
-            // image: string;
-            ref: string;
+            referral: string;
           },
           action: { resetForm: () => void },
         ) => {
@@ -140,19 +138,19 @@ export default function SignupUserModal() {
                       </div>
                       <div>
                         <div className="flex flex-col">
-                          <label htmlFor="ref">
+                          <label htmlFor="referral">
                             <p>referral</p>
                             <Field
-                              type="ref"
+                              type="referral"
                               placeholder="referral code"
-                              name="ref" 
+                              name="referral" 
                               className="bg-white text-black border-2 rounded-xl"
                             />
                           </label>
                         </div>
                         <ErrorMessage
                           component="div"
-                          name="ref"
+                          name="referral"
                           className=" text-[0.7rem] fixed"
                         />
                       </div>

@@ -22,7 +22,7 @@ export default function Verify() {
         createToken(data.token, '/');
         dispatch(setUser(data.userData));
       }
-      if (data.message.message == 'jwt expired') {
+      if (data.message.message == 'expired') {
         deleteToken('token', '/');
         throw 'link expired, please sign up again.';
       }
