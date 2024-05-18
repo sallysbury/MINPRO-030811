@@ -30,11 +30,8 @@ export default function LoginPromotorModal() {
         },
       );
       const data = await response.json();
-      console.log(data);
-      
       dispatch(setUser(data.data))
       createToken(data.token, '/')
-      console.log(data.token);
       if (data.status !== 'ok') {
         throw data.message;
       } else {

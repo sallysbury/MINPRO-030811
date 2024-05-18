@@ -20,7 +20,7 @@ export const Header = () => {
     })
       const data = await res.json()
       console.log(data);
-      dispatch(setUser(data.userData))
+      dispatch(setUser(data.data))
 
     } catch (error) {
       console.log(error);
@@ -105,7 +105,6 @@ export const Header = () => {
             <li>
               <a className="justify-between" href='/profile'>
                 Profile
-                <span className="badge">New</span>
               </a>
             </li>
             <li>

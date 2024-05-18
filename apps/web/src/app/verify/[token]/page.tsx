@@ -17,15 +17,20 @@ export default function Verify() {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(token);
+      
       const data = await res.json();
+      console.log(data);
+      
       if (data.status == 'ok') {
         createToken(data.token, '/');
         dispatch(setUser(data.userData));
       }
-      if (data.message.message == 'expired') {
+      if (data.message == 'expired') {
         deleteToken('token', '/');
         throw 'link expired, please sign up again.';
       }
+
     } catch (error) {
       console.log(error);
       alert(error);

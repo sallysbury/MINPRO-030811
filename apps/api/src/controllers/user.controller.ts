@@ -28,7 +28,7 @@ export class UserController {
         const { password, referral, email, name, image  } = req.body
         const salt = await genSalt(10)
         const hashPassword = await hash(password,salt)
-        let userID
+        let userId
         let exisUsers = await prisma.user.findUnique({
             where: {
                 email
@@ -38,11 +38,12 @@ export class UserController {
         if (referral.length !==0){
             const exisRef = await prisma.user.findUnique({
                 where: {
-                    referral: referral
+                    referral: referral,
+                    isActive: true
                 }
             })
             if (exisRef == null) throw "Referral code not exist"
-            userID = exisUsers?.id
+            userId = exisRef.id
         }
         if(exisUsers?.isActive == false && exisUsers){
             exisUsers = await prisma.user.update({
@@ -77,7 +78,9 @@ export class UserController {
                 email: exisUsers.email
             }
         })
-        const payload = { id: users.id, type: users.type}
+        console.log(userId);
+        
+        const payload = { id: users.id, type: users.type, userId: userId}
         const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1h'})
         const link = `http://localhost:3000/verify/${token}`
         const templatePath = path.join(__dirname, "../templates", "register.html")
@@ -113,7 +116,7 @@ export class UserController {
             const user = await prisma.user.findFirst({
                 where: {
                     email,
-                    isActive: false
+                    isActive: true
                 },
             })
             if (user == null) throw "Users Not Found"

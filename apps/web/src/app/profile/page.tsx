@@ -38,12 +38,12 @@ export default function Profile() {
             <dd className="text-gray-700 sm:col-span-2">{account?.type}</dd>
           </div>
 
-          <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+          <div className={`grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4 ${account?.type == "promotors"?  "hidden" : "flex"}`}>
             <dt className="font-medium text-gray-900">Referral</dt>
             <dd className="text-gray-700 sm:col-span-2">{account?.referral}</dd>
           </div>
 
-          <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+          <div className={`grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4 ${account?.type == "promotors"?  "hidden" : "flex"}`}>
             <dt className="font-medium text-gray-900">Point</dt>
             <dd className="text-gray-700 sm:col-span-2">{new Intl.NumberFormat('en-DE').format(+account?.sumPoint!)}</dd>
           </div>

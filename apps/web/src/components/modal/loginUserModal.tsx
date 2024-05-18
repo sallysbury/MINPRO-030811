@@ -29,7 +29,6 @@ export default function LoginUserModal() {
       const data = await response.json();
       dispatch(setUser(data.user))
       createToken(data.token, '/')
-      
       if (data.status !== 'ok') {
         throw (data.message);
       } else {

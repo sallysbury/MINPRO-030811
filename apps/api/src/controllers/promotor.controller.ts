@@ -75,8 +75,9 @@ export class PromotorController {
         })
         res.status(200).send({
             status: 'ok',
-            message: 'Created',
+            message: 'promotors Created',
             promotor,
+            type: promotor.type,
             token
         })
         } catch (error) {
@@ -93,6 +94,7 @@ export class PromotorController {
             const promotor = await prisma.promotor.findFirst({
                 where: {
                     email,
+                    isActive: true
                 }
             })
             if (promotor == null ) throw "User Not Found!"
