@@ -175,7 +175,8 @@ export class UserController {
                         email: user.email,
                         referral: user.referral,
                         sumPoint: 0,
-                        type: user.type
+                        type: user.type,
+                        image: user.image
                     },
                     token
                 })

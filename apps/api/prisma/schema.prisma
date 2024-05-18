@@ -22,16 +22,17 @@ enum TransactionStat {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique
-  image    String? @db.LongText
-  password String
-  referral String  @unique
-  type     String  @default("users")
-  redeem   Boolean @default(true)
-  isActive Boolean @default(false)
-  Point    Point[]
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  image        String?   @db.LongText
+  password     String
+  referral     String    @unique
+  type         String    @default("users")
+  redeem       Boolean   @default(true)
+  redeemExpire DateTime?
+  isActive     Boolean   @default(false)
+  Point        Point[]
 }
 
 model Promotor {

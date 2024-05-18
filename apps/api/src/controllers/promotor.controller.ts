@@ -107,7 +107,8 @@ export class PromotorController {
                     id: promotor.id,
                     name: promotor.name,
                     email: promotor.email,
-                    type: promotor.type
+                    type: promotor.type,
+                    image: promotor.image
                 }
             })
         } catch (error) {

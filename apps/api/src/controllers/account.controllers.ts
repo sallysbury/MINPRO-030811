@@ -5,24 +5,70 @@ import { sign } from 'jsonwebtoken';
 export class AccountController {
   async getAccount(req: Request, res: Response) {
     try {
-        console.log(req.user?.type);
-        
       if (req.user?.type == 'users') {
         const user = await prisma.user.findUnique({
           where: {
             id: req.user.id,
           },
+          include: {
+            Point: true
+          }
         });
+        const getPoint = await prisma.point.findFirst({
+            where: {
+                userId: user?.id,
+                redeem: false
+            }
+        })
+        if (getPoint !== null){
+            const userPoint = await prisma.point.aggregate({
+                where: {
+                    userId: user?.id,
+                    redeem: false
+                },
+                _sum: {
+                    point: true
+                },
+                _min: {
+                    expiredDate: true
+                }
+            })
+            const expireSoonPoint = await prisma.point.aggregate({
+                where: {
+                    userId: user?.id,
+                    redeem: false
+                },
+                _sum: {
+                    point: true
+                }
+            })
+            return res.status(200). send({
+                status: 'ok',
+                message: 'found',
+                data: {
+                    id: user?.id,
+                    name: user?.name,
+                    email: user?.email,
+                    referral: user?.referral,
+                    type: user?.type,
+                    sumPoint: userPoint._sum.point,
+                    expireSoonPoint: expireSoonPoint._sum.point,
+                    expireDate: userPoint._min.expiredDate,
+                    image: user?.image
+                }
+            })
+        }
         res.status(200).send({
           status: 'ok',
-          message: 'users found',
+          message: 'account found',
           userData: {
             id: user?.id,
             name: user?.name,
             email: user?.email,
             type: user?.type,
-            image: user?.image,
             referral: user?.referral,
+            sumPoint: 0,
+            image: user?.image
           },
         });
       }
@@ -74,11 +120,13 @@ export class AccountController {
     date.setMilliseconds(0);
     const expired = date.setMonth(date.getMonth() + 3);
     try {
+        let user
       if (req.user?.type == 'users') {
-        const user = await prisma.user.update({
+        user = await prisma.user.update({
           data: {
             isActive: true,
             redeem: false,
+            redeemExpire: new Date(expired)
           },
           where: {
             id: req.user.id,
@@ -124,10 +172,11 @@ export class AccountController {
                 email: user.email,
                 referral: user.referral,
                 type: user.type,
-                sum : point._sum.point,
+                sumPoint : point._sum.point,
                 expireSoonPoint: expireSoonPoint._sum.point,
                 expireDate: point._min.expiredDate,
-                image: user.image
+                image: user.image,
+                point
             }
         })
         } else {

@@ -7,11 +7,11 @@ import { useEffect } from 'react';
 
 export const Header = () => {
   const dispatch = useAppDispatch();
-  const account = useAppSelector((state) => state.Users.value);
+  const account = useAppSelector((state) => state.account.value);
   
   const getUser = async (token: any) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/accounts/accountType`,{
+      const res = await fetch(`http://localhost:8000/api/accounts/`,{
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -21,6 +21,7 @@ export const Header = () => {
       const data = await res.json()
       console.log(data);
       dispatch(setUser(data.userData))
+
     } catch (error) {
       console.log(error);
     }
@@ -57,7 +58,7 @@ export const Header = () => {
               />
             </svg>
           </div>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white text-black rounded-box w-52">
             <li><a>E</a></li>
             <li><a>Event Category</a>
               <ul className="p-2">
@@ -75,7 +76,7 @@ export const Header = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>Event</a>
+            <a href='/event'>Event</a>
           </li>
           <li>
             <a>Everything</a>
@@ -91,10 +92,10 @@ export const Header = () => {
         </a>
       </div>
       <div>
-        <div className={`dropdown dropdown-end`}>
-          <div tabIndex={0} role="button" className={`btn btn-ghost btn-circle avatar ${account?.type ? "flex" : "hidden"}`}>
+        <div className={`dropdown dropdown-end  ${account?.type ? "flex" : "hidden"}`}>
+          <div tabIndex={0} role="button" className={`btn btn-ghost btn-circle avatar`}>
             <div className="w-10 rounded-full">
-              <img alt="Image Users" src={account?.image}/>
+              <img alt="image" src={account?.image}/>
             </div>
           </div>
           <ul
@@ -108,7 +109,7 @@ export const Header = () => {
               </a>
             </li>
             <li>
-              <a>Settings</a>
+              <a href='/settings'>Settings</a>
             </li>
             <li>
               <a onClick={Logout}>Logout</a>

@@ -1,20 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-export interface UserSlice {
+export interface AccountSlice {
     value: {
         id: number | null,
         name: string,
         email: string,
         referral?: string,
         image: string,
-        type: string
+        type: string,
+        point: number,
+        sumPoint?: number
     } | null
 }
-const initialState: UserSlice = {
+const initialState: AccountSlice = {
     value: null
 }
-export const UserSlice = createSlice({
-    name: "Users",
+export const accountSlice = createSlice({
+    name: "account",
     initialState,
     reducers: {
         setUser: (state, action) => {
@@ -22,4 +24,4 @@ export const UserSlice = createSlice({
         }
     }
 })
-export const { setUser } = UserSlice.actions
+export const { setUser } = accountSlice.actions

@@ -91,13 +91,13 @@ export default function LoginUserModal() {
                       type="password"
                       placeholder="User password"
                       name="password"
-                      className="bg-zinc-200 text-xl text-xblack border-b-[1px] border-xmetal focus:outline-none placeholder:text-zinc-300"
+                      className="bg-zinc-200 text-xl text-xblack border-b-[1px] focus:outline-none placeholder:text-zinc-300"
                     />
                   </div>
                   <ErrorMessage
                     component="div"
                     name="password"
-                    className="text-xmetal text-sm text-[0.7rem] fixed"
+                    className="text-sm text-[0.7rem] fixed"
                   />
                 </div>
                 <button

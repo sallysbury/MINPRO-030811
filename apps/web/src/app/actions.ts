@@ -7,7 +7,7 @@ export async function createToken(token: string, url: string = '/') {
   redirect(url);
 }
 
-export async function deleteToken(key: string, url: string) {
+export async function deleteToken(key: string, url: string = '/') {
   cookies().delete(key);
   redirect(url);
 }
