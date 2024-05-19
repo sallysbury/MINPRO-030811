@@ -157,7 +157,7 @@ export class UserController {
                     mesage: 'user found',
                     token,
                     data: {
-                        is: user.id,
+                        id: user.id,
                         name: user.name,
                         email: user.email,
                         referral: user.referral,

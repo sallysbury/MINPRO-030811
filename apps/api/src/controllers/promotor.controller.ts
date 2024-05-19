@@ -93,8 +93,7 @@ export class PromotorController {
             const {email, password} = req.body
             const promotor = await prisma.promotor.findFirst({
                 where: {
-                    email,
-                    isActive: true
+                    email
                 }
             })
             if (promotor == null ) throw "User Not Found!"

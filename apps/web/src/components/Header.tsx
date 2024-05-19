@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 export const Header = () => {
   const dispatch = useAppDispatch();
   const account = useAppSelector((state) => state.account.value);
+  console.log(account);
   
   const getUser = async (token: any) => {
     try {
@@ -92,7 +93,7 @@ export const Header = () => {
         </a>
       </div>
       <div>
-        <div className={`dropdown dropdown-end  ${account?.type ? "flex" : "hidden"}`}>
+        <div className={`dropdown dropdown-end ${account?.type ? "flex" : "hidden"}`}>
           <div tabIndex={0} role="button" className={`btn btn-ghost btn-circle avatar`}>
             <div className="w-10 rounded-full">
               <img alt="image" src={account?.image}/>
