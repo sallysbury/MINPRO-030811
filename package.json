@@ -13,6 +13,7 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.2",
     "@commitlint/config-conventional": "^18.4.2",
+    "@types/js-cookie": "^3.0.6",
     "eslint": "^8.48.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.1.0",
@@ -30,5 +31,10 @@
     "hooks": {
       "pre-commit": "npx lint-staged"
     }
+  },
+  "dependencies": {
+    "@prisma/client": "^5.13.0",
+    "js-cookie": "^3.0.5",
+    "tailwindcss": "^3.4.3"
   }
 }

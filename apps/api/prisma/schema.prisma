@@ -10,12 +10,97 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
+enum EventCategory {
+  music
+  sport
+}
+
+enum TransactionStat {
+  pending
+  paid
+  cancel
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  image        String?   @db.LongText
+  password     String
+  referral     String    @unique
+  type         String    @default("users")
+  redeem       Boolean   @default(true)
+  redeemExpire DateTime?
+  isActive     Boolean   @default(false)
+  Point        Point[]
+}
+
+model Promotor {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  image    String? @db.LongText
+  password String
+  type     String  @default("promotors")
+  isActive Boolean @default(false)
+  event    Event[]
+}
+
+model Event {
+  id          Int           @id @default(autoincrement())
+  title       String
+  location    String
+  eventDate   DateTime      @default(now())
+  category    EventCategory
+  image       String?       @db.LongText
+  slug        String        @db.LongText
+  desc        String
+  address     String        @db.LongText
+  city        String
+  price       Int
+  seats       Int
+  eventId     Int
+  promotorId  Promotor      @relation(fields: [eventId], references: [id])
+  OrderTicket Transaction[]
+  Promo       Promo[]
+}
+
+model Promo {
+  id        Int         @id @default(autoincrement())
+  eventId   Int
+  event     Event       @relation(fields: [eventId], references: [id])
+  PromoItem PromoItem[]
+}
+
+model PromoItem {
   id        Int      @id @default(autoincrement())
   name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  discount  Int
+  startDate DateTime
+  endDate   DateTime
+  promoId   Int
+  promo     Promo    @relation(fields: [promoId], references: [id])
+}
 
-  @@map("samples") // if you want to use snake_case format
+model Transaction {
+  id          Int             @id @default(autoincrement())
+  userId      Int
+  eventId     Event           @relation(fields: [userId], references: [id])
+  quantity    Int
+  promoItemId Int
+  totalDisc   Int
+  total       Int
+  status      TransactionStat
+  image       String?
+  dateDate    DateTime        @default(now())
+  expiredDate DateTime        @default(now())
+}
+
+model Point {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  point       Int      @default(10000)
+  expiredDate DateTime
+  redeem      Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id])
 }
