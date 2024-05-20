@@ -8,7 +8,7 @@ const registerSchema = yup.object().shape({
     email: yup.string().email('invalid email').required('email can not be empty')
 })
 
-export default function ChangeEmail() {
+export default function ChangeEmailModal() {
     const [isConfirm, setConfirm] = useState(false)
 
     const closeModal = () => {
@@ -21,7 +21,7 @@ export default function ChangeEmail() {
     const handleConfirm = async (dataSet: {email: string}) => {
         try {
             const token = Cookies.get('token')
-            const res = await fetch('http://localhost:8000/api/account/changeEmail', {
+            const res = await fetch('http://localhost:8000/api/accounts/changeEmail', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

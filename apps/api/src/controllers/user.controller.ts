@@ -124,6 +124,8 @@ export class UserController {
             if(!isValidPass) throw 'Wrong Password'
             const payload = {id: user.id, type: user.type}
             const token = sign(payload, process.env.KEY_JWT!,{expiresIn: '1h'})
+            console.log(token);
+            
             const getPoint = await prisma.point.findFirst({
                 where: {
                     userId: user.id,

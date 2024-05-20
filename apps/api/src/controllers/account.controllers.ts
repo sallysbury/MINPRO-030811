@@ -5,6 +5,7 @@ import { sign } from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs'
 import { compare, genSalt, hash } from 'bcrypt';
+import Handlebars from 'handlebars';
 
 export class AccountController {
   async getAccount(req: Request, res: Response) {
@@ -303,7 +304,7 @@ export class AccountController {
             })
         }
         if(req.user?.type == "promotors"){
-            acc = await prisma.user.update({
+            acc = await prisma.promotor.update({
                 where: {
                     id: req.user?.id
                 },
@@ -326,6 +327,9 @@ export class AccountController {
   }
   async changeEmail(req: Request, res: Response){
     try {
+      console.log(req.body);
+      console.log(req.user);
+      
         const {email} = req.body
         let acc 
         if(req.user?.type == "users"){
@@ -334,11 +338,19 @@ export class AccountController {
                 id: req.user.id
             }
            })
+           if (acc?.email == email) throw 'already using this email'
         }
-        if(acc?.email == email) throw 'email already used'
+        if (req.user?.type == "promotors"){
+          acc = await prisma.promotor.findFirst({
+            where: {
+              id: req.user.id
+            }
+          })
+          if (acc?.email == email) throw 'already using this email'
+        }
         const payload = {id: req.user?.id, type: req.user?.type, email}
         const token = sign(payload, process.env.KEY_JWT!, {expiresIn: '10m'})
-        const link = `http://localhost:3000/${req.user?.type}s/verfy/${token}`
+        const link = `http://localhost:3000/verify/${token}`
         const templatePath = path.join(__dirname, "../templates", "register.html")
         const templateSource = fs.readFileSync(templatePath, 'utf-8')
         const compiletemplate = Handlebars.compile(templateSource)
@@ -377,6 +389,16 @@ export class AccountController {
                     }
                 })
             }
+            if(req.user?.type == 'promotors'){
+              await prisma.promotor.update({
+                where: {
+                  id: req.user.id
+                },
+                data: {
+                  email: req.user.email
+                }
+              })
+            }
             res.status(200).send({
                 status: 'ok',
                 message: 'email changed'
@@ -388,6 +410,7 @@ export class AccountController {
             })
         }
     } catch (error) {
+        console.log(error);
         
     }
   }

@@ -61,7 +61,7 @@ export const Header = () => {
           </div>
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white text-black rounded-box w-52">
             <li><a href='/event'>Event</a></li>
-            <li><a>Everything</a></li>
+            <li><a href='/search'>Search Page</a></li>
           </ul>
         </div>
         <a className="btn btn-ghost text-xl" href="/">
@@ -74,7 +74,7 @@ export const Header = () => {
             <a href='/event'>Event</a>
           </li>
           <li>
-            <a>Everything</a>
+            <a href='/search'>Search Page</a>
           </li>
         </ul>
       </div>
@@ -90,7 +90,7 @@ export const Header = () => {
         <div className={`dropdown dropdown-end ${account?.type ? "flex" : "hidden"}`}>
           <div tabIndex={0} role="button" className={`btn btn-ghost btn-circle avatar`}>
             <div className="w-10 rounded-full">
-              <img alt="image" src={account?.image}/>
+              <img alt="image" src={account?.image ? account?.image : '/image/default.jpeg'}/>
             </div>
           </div>
           <ul

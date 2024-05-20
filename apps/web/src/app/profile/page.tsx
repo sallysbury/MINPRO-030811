@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import ChangeNameModal from '@/components/modal/changeName';
-import ChangeEmail from '@/components/modal/changEmailModal';
+import ChangeEmailModal from '@/components/modal/changEmailModal';
 
 export default function Profile() {
   const account = useAppSelector((state) => state.account.value);
@@ -74,7 +74,7 @@ export default function Profile() {
         <div className="hidden sm:block sm:basis-56">
           <img
             alt="profile"
-            src={account?.image}
+            src={account?.image ? account?.image : '/image/default.jpeg'}
             className="aspect-square h-full w-full object-cover rounded-xl"
           />
         </div>
@@ -109,7 +109,7 @@ export default function Profile() {
             <dt></dt>
             <dd>
               <button onClick={modalEmail}>change email</button>
-              <ChangeEmail/>
+              <ChangeEmailModal/>
             </dd>
           </div>
 

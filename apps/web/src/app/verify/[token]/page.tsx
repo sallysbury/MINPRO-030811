@@ -24,7 +24,7 @@ export default function Verify() {
       
       if (data.status == 'ok') {
         createToken(data.token, '/');
-        dispatch(setUser(data.userData));
+        dispatch(setUser(data.data));
       }
       if (data.message == 'expired') {
         deleteToken('token', '/');
@@ -39,8 +39,8 @@ export default function Verify() {
   return (
     <div className="flex bg-white justify-center items-center w-full h-screen">
       <div>
-        <h1>
-          Register your account
+        <h1 className='ver gap-10'>
+          Verify your account
         </h1>
         <button className="bg-black text-white text-2xl w-full py-2 rounded-xl" onClick={handleVerify}>
           verify
