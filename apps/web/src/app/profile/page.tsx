@@ -4,6 +4,8 @@ import { useAppSelector } from '../lib/features/hooks';
 import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
+import ChangeNameModal from '@/components/modal/changeName';
+import ChangeEmail from '@/components/modal/changEmailModal';
 
 export default function Profile() {
   const account = useAppSelector((state) => state.account.value);
@@ -11,6 +13,17 @@ export default function Profile() {
   const dispatch = useDispatch()
   const [image, setImage] = useState<File | null>(null)
 
+  const modalName = () => {
+    const modal = document.getElementById('my_modal_changeName')
+    if (modal instanceof HTMLDialogElement)(
+      modal.showModal()
+    )
+  }
+  const modalEmail = () => {
+    const modal = document.getElementById("my_modal_changeEmail");
+    if (modal instanceof HTMLDialogElement) {
+        modal.showModal()}
+  }
   const getUser = async (token: any) => {
     try {
       const response = await fetch('http://localhost:8000/api/accounts/accountType', {
@@ -85,7 +98,8 @@ export default function Profile() {
             <dd className="text-gray-700 sm:col-span-2">{account?.name}</dd>
             <dt></dt>
             <dd>
-             
+             <button onClick={modalName}>change name</button>
+             <ChangeNameModal/>
             </dd>
           </div>
 
@@ -94,15 +108,15 @@ export default function Profile() {
             <dd className="text-gray-700 sm:col-span-2">{account?.email}</dd>
             <dt></dt>
             <dd>
-              
+              <button onClick={modalEmail}>change email</button>
+              <ChangeEmail/>
             </dd>
           </div>
 
           <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
             <dt className="font-medium text-gray-900">Role</dt>
             <dd className="text-gray-700 sm:col-span-2">{account?.type}</dd>
-            <dt></dt>
-            <dd></dd>
+           
           </div>
 
           <div className={`grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4 ${account?.type == "promotors"?  "hidden" : "flex"}`}>

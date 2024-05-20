@@ -19,6 +19,9 @@ export class AccountRouter {
         this.router.get('/accountType', this.verifyAccount.verifyToken ,this.accountController.getAccountType)
         this.router.patch('/verify', this.verifyAccount.verifyToken, this.accountController.verify)
         this.router.patch('/images', this.verifyAccount.verifyToken, uploader('IMG', '/images').single('file'), this.accountController.imageUpload)
+        this.router.patch('/changeName', this.verifyAccount.verifyToken, this.accountController.changeName) 
+        this.router.patch('/changeEmail', this.verifyAccount.verifyToken, this.accountController.changeEmail)
+        
     }
 
     getRouter(): Router{

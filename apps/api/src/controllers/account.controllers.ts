@@ -284,4 +284,177 @@ export class AccountController {
         })
     }
 }
+  async changeName(req: Request, res: Response){
+    try {
+        const {name} = req.body
+        console.log(req.user);
+        console.log(req.body);
+        
+        
+        let acc 
+        if(req.user?.type == 'users'){
+            acc = await prisma.user.update({
+                where: {
+                    id: req.user?.id
+                },
+                data: {
+                    name
+                }
+            })
+        }
+        if(req.user?.type == "promotors"){
+            acc = await prisma.user.update({
+                where: {
+                    id: req.user?.id
+                },
+                data: {
+                    name
+                }
+            })
+        }
+        res.status(200).send({
+            status: 'ok',
+            message: 'name changed',
+            acc
+        })
+    } catch (error) {
+        res.status(400).send({
+            status: 'error',
+            message: error
+        })
+    }
+  }
+  async changeEmail(req: Request, res: Response){
+    try {
+        const {email} = req.body
+        let acc 
+        if(req.user?.type == "users"){
+           acc = await prisma.user.findFirst({
+            where: {
+                id: req.user.id
+            }
+           })
+        }
+        if(acc?.email == email) throw 'email already used'
+        const payload = {id: req.user?.id, type: req.user?.type, email}
+        const token = sign(payload, process.env.KEY_JWT!, {expiresIn: '10m'})
+        const link = `http://localhost:3000/${req.user?.type}s/verfy/${token}`
+        const templatePath = path.join(__dirname, "../templates", "register.html")
+        const templateSource = fs.readFileSync(templatePath, 'utf-8')
+        const compiletemplate = Handlebars.compile(templateSource)
+        const html = compiletemplate({
+            name: acc?.name,
+            link
+        })
+        await transporter.sendMail({
+            from: process.env.MAIL_USER,
+            to: email,
+            subject: 'Verify new Email',
+            html
+        })
+        res.status(200).send({
+            status: 'ok',
+            message: 'email send',
+            token
+        })
+    } catch (error) {
+        res.status(400).send({
+            status: 'error',
+            message: error
+        })
+    }
+  }
+  async verifyEmail(req: Request, res: Response){
+    try {
+        try {
+            if(req.user?.type == 'users'){
+                await prisma.user.update({
+                    where: {
+                        id: req.user.id
+                    },
+                    data: {
+                        email: req.user.email
+                    }
+                })
+            }
+            res.status(200).send({
+                status: 'ok',
+                message: 'email changed'
+            })
+        } catch (error) {
+            res.status(200).send({
+                status: 'ok',
+                message: 'email changed'
+            })
+        }
+    } catch (error) {
+        
+    }
+  }
+  async changePass(req: Request, res: Response){
+    try {
+      const { password, newPass} = req.body
+      if (req.user?.type == 'users'){
+        const checkPass = await prisma.user.findFirst({
+          where: {
+            id: req.user.id,
+          }
+        })
+        if ( checkPass == null ) throw 'acc not found'
+        const isValidPass = await compare(password, checkPass.password) 
+        const isSamePass = await compare(newPass, checkPass.password)
+        if (isValidPass == false) throw 'incorrect password'
+        if (isSamePass == true) throw 'password should not be the same'
+        if (isValidPass) {
+          const salt = await genSalt(10)
+          const hashPassword = await hash(newPass, salt)
+          await prisma.user.update({
+            data: {
+              password: hashPassword
+            },
+            where: {
+              id: req.user.id
+            }
+          })
+          return res.status(200).send({
+            status: 'ok',
+            message: 'password changed'
+          })
+        }
+      }
+      if(req.user?.type == 'promotors'){
+        const checkPass = await prisma.promotor.findFirst({
+          where: {
+            id: req.user.id
+          }
+        })
+        if ( checkPass == null ) throw 'acc not found'
+        const isValidPass = await compare(password, checkPass.password) 
+        const isSamePass = await compare(newPass, checkPass.password)
+        if (isValidPass == false) throw 'incorrect password'
+        if (isSamePass == true) throw 'password should not be the same'
+        if (isValidPass) {
+          const salt = await genSalt(10)
+          const hashPassword = await hash(newPass, salt)
+          await prisma.promotor.update({
+            data: {
+              password: hashPassword
+            },
+            where: {
+              id: req.user.id
+            }
+          })
+          return res.status(200).send({
+            status: 'ok',
+            messsage: 'password changed'
+          })
+        }
+      }
+    } catch (error) {
+      res.status(400).send({
+        status: 'error',
+        message: error
+      })
+    }
+  }
 }

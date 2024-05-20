@@ -33,7 +33,7 @@ export default function SignupPromotorModal() {
       if (data.status !== 'ok') {
         throw data;
       } else {
-        router.push('/');
+        router.push('/waitingverif');
       }
     } catch (error: any) {
       alert(error.message);

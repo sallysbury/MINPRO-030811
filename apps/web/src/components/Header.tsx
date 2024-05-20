@@ -60,14 +60,8 @@ export const Header = () => {
             </svg>
           </div>
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white text-black rounded-box w-52">
-            <li><a>E</a></li>
-            <li><a>Event Category</a>
-              <ul className="p-2">
-                <li><a>Music</a></li>
-                <li> <a>Sport</a></li>
-              </ul>
-            </li>
-            <li><a>Item 3</a></li>
+            <li><a href='/event'>Event</a></li>
+            <li><a>Everything</a></li>
           </ul>
         </div>
         <a className="btn btn-ghost text-xl" href="/">
@@ -107,9 +101,6 @@ export const Header = () => {
               <a className="justify-between" href='/profile'>
                 Profile
               </a>
-            </li>
-            <li>
-              <a href='/settings'>Settings</a>
             </li>
             <li>
               <a onClick={Logout}>Logout</a>
